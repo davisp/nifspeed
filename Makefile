@@ -8,14 +8,11 @@ GCCFLAGS = -O3 -fPIC -bundle -flat_namespace -undefined suppress -fno-common -Wa
 # Linux Flags
 #GCCFLAGS = -O3 -fPIC -shared -fno-common -Wall
 
-ICULIBS = $(shell icu-config --ldflags-libsonly)
-ICULIBDIR = $(shell icu-config --ldflags-searchpath)
-
 CFLAGS = $(GCCFLAGS) $(INCLUDES)
-LDFLAGS = $(GCCFLAGS) $(ICULIBDIR) $(ICULIBS)
+LDFLAGS = $(GCCFLAGS)
 
-DRIVERS = couch_uca.so nif_uca.so
-BEAM = couch_uca.beam nif_uca.beam
+DRIVERS = drvsize.so nifsize.so
+BEAM = drvsize.beam nifsize.beam
 
 all: check
 

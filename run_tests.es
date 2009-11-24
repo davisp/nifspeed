@@ -1,18 +1,18 @@
 
 main([]) ->
     Count = 500000,
-    Size = 1,
+    Size = 4096,
     
-    Left = << <<"a">> || _ <- lists:seq(0, Size) >>,
-    Right = list_to_binary([<<"b">>, Left]),
-
+    Bin = << <<"a">> || _ <- lists:seq(1, Size) >>,
+    
     io:format("Running tests...~n", []),
 
-    couch_uca:start_driver("."),
-    nif_uca:start(),
+    ok = drvsize:start(),
+    ok = nifsize:start(),
 
-    timeit("couch_uca", fun() -> run_couch_uca(Count, Left, Right, -1) end),
-    timeit("nif_uca", fun() -> run_nif_uca(Count, Left, Right, -1) end),
+    timeit("bifsize", fun() -> run_bifsize(Count, Bin, Size) end),
+    timeit("drvsize", fun() -> run_drvsize(Count, Bin, Size) end),
+    timeit("nifsize", fun() -> run_nifsize(Count, Bin, Size) end),
     ok.
 
 timeit(Name, Fun) ->
@@ -21,15 +21,21 @@ timeit(Name, Fun) ->
   Length = float(timer:now_diff(erlang:now(), Before)) / 1000000.0,
   io:format("~s: ~f s~n", [Name, Length]).
 
-run_couch_uca(0, _, _, _) ->
+run_bifsize(0, _, _) ->
   ok;
-run_couch_uca(Count, Left, Right, Exp) ->
-  Exp = couch_uca:collate(Left, Right),
-  run_couch_uca(Count-1, Right, Left, Exp * -1).
+run_bifsize(Count, Bin, Exp) ->
+  Exp = erlang:size(Bin),
+  run_bifsize(Count-1, Bin, Exp).
 
-run_nif_uca(0, _, _, _) ->
+run_drvsize(0, _, _) ->
   ok;
-run_nif_uca(Count, Left, Right, Exp) ->
-  Exp = nif_uca:collate(Left, Right),
-  run_nif_uca(Count-1, Right, Left, Exp * -1).
+run_drvsize(Count, Bin, Exp) ->
+  Exp = drvsize:size(Bin),
+  run_drvsize(Count-1, Bin, Exp).
+
+run_nifsize(0, _, _) ->
+  ok;
+run_nifsize(Count, Bin, Exp) ->
+  Exp = nifsize:size(Bin),
+  run_nifsize(Count-1, Bin, Exp).
 
