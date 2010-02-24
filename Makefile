@@ -1,9 +1,10 @@
-OTPROOT=/Users/davisp/tmp/otp_src_R13B03
+OTPROOT=/usr/local/lib/erlang
 ARCH=i386-apple-darwin10.0.0
-INCLUDES = -I$(OTPROOT)/erts/include/$(ARCH) -I$(OTPROOT)/erts/emulator/beam/
+ERTS=erts-5.7.5
+INCLUDES = -I$(OTPROOT)/$(ERTS)/include/ -I/opt/local/include
 
 # OS X flags.
-GCCFLAGS = -O3 -fPIC -bundle -flat_namespace -undefined suppress -fno-common -Wall
+GCCFLAGS = -fPIC -bundle -flat_namespace -undefined suppress -fno-common -Wall -m64
 
 # Linux Flags
 #GCCFLAGS = -O3 -fPIC -shared -fno-common -Wall

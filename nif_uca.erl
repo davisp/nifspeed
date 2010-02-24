@@ -1,10 +1,14 @@
 -module(nif_uca).
--export([start/0, collate/2]).
+-export([open/0, collate/3]).
+-on_load(load_nif/0).
 
-start() ->
+load_nif() ->
     erlang:load_nif("nif_uca", 0).
 
-collate(_A, _B) ->
+open() ->
+    nif_error(?LINE).
+
+collate(_Coll, _A, _B) ->
     nif_error(?LINE).    
 
 nif_error(Line) ->
